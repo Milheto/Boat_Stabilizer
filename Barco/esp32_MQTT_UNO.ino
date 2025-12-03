@@ -5,7 +5,7 @@
 
 
 
-// Variáveis globais 
+// Variáveis globais
 float t_val, roll, pitch, yaw;
 float gyroX, gyroY, gyroZ;
 float servoRollAngle, servoYawAngle;
@@ -41,8 +41,8 @@ void reconectarMQTT() {
     Serial.println(" conectado!");
 
     // Novo tópico
-    mqtt.subscribe("nautica");                 
-    mqtt.subscribe("nautica/+/parametro", 1);  
+    mqtt.subscribe("nautica");
+    mqtt.subscribe("nautica/+/parametro", 1);
   }
 }
 
@@ -89,51 +89,53 @@ void loop() {
     }
 
     // Agora separa cada parte pelo ':' e converte para float
-    String t_str              = partes[0].substring(partes[0].indexOf(':') + 1);
-    String roll_str           = partes[1].substring(partes[1].indexOf(':') + 1);
-    String pitch_str          = partes[2].substring(partes[2].indexOf(':') + 1);
-    String yaw_str            = partes[3].substring(partes[3].indexOf(':') + 1);
-    String gyroX_str          = partes[4].substring(partes[4].indexOf(':') + 1);
-    String gyroY_str          = partes[5].substring(partes[5].indexOf(':') + 1);
-    String gyroZ_str          = partes[6].substring(partes[6].indexOf(':') + 1);
+    String t_str = partes[0].substring(partes[0].indexOf(':') + 1);
+    String roll_str = partes[1].substring(partes[1].indexOf(':') + 1);
+    String pitch_str = partes[2].substring(partes[2].indexOf(':') + 1);
+    String yaw_str = partes[3].substring(partes[3].indexOf(':') + 1);
+    String gyroX_str = partes[4].substring(partes[4].indexOf(':') + 1);
+    String gyroY_str = partes[5].substring(partes[5].indexOf(':') + 1);
+    String gyroZ_str = partes[6].substring(partes[6].indexOf(':') + 1);
     String servoRollAngle_str = partes[7].substring(partes[7].indexOf(':') + 1);
-    String servoYawAngle_str  = partes[8].substring(partes[8].indexOf(':') + 1);
-    String diskRollRPM_str    = partes[9].substring(partes[9].indexOf(':') + 1);
-    String diskYawRPM_str     = partes[10].substring(partes[10].indexOf(':') + 1);
+    String servoYawAngle_str = partes[8].substring(partes[8].indexOf(':') + 1);
+    String diskRollRPM_str = partes[9].substring(partes[9].indexOf(':') + 1);
+    String diskYawRPM_str = partes[10].substring(partes[10].indexOf(':') + 1);
 
     // Converte para float
-    t_val           = t_str.toFloat();
-    roll            = roll_str.toFloat();
-    pitch           = pitch_str.toFloat();
-    yaw             = yaw_str.toFloat();
-    gyroX           = gyroX_str.toFloat();
-    gyroY           = gyroY_str.toFloat();
-    gyroZ           = gyroZ_str.toFloat();
-    servoRollAngle  = servoRollAngle_str.toFloat();
-    servoYawAngle   = servoYawAngle_str.toFloat();
-    diskRollRPM     = diskRollRPM_str.toFloat();
-    diskYawRPM      = diskYawRPM_str.toFloat();
+    t_val = t_str.toFloat();
+    roll = roll_str.toFloat();
+    pitch = pitch_str.toFloat();
+    yaw = yaw_str.toFloat();
+    gyroX = gyroX_str.toFloat();
+    gyroY = gyroY_str.toFloat();
+    gyroZ = gyroZ_str.toFloat();
+    servoRollAngle = servoRollAngle_str.toFloat();
+    servoYawAngle = servoYawAngle_str.toFloat();
+    diskRollRPM = diskRollRPM_str.toFloat();
+    diskYawRPM = diskYawRPM_str.toFloat();
 
-    // daqui pra baixo você usa as variáveis como quiser
-  }
-
-  // Exemplo de JSON publicado no novo tópico
+    // Exemplo de JSON publicado no novo tópico
   String payload = "{";
-    payload += "\"t\":"               + String(t_val, 3)          + ",";
-    payload += "\"roll\":"            + String(roll, 3)           + ",";
-    payload += "\"pitch\":"           + String(pitch, 3)          + ",";
-    payload += "\"yaw\":"             + String(yaw, 3)            + ",";
-    payload += "\"gyroX\":"           + String(gyroX, 3)          + ",";
-    payload += "\"gyroY\":"           + String(gyroY, 3)          + ",";
-    payload += "\"gyroZ\":"           + String(gyroZ, 3)          + ",";
-    payload += "\"servoRollAngle\":"  + String(servoRollAngle, 2) + ",";
-    payload += "\"servoYawAngle\":"   + String(servoYawAngle, 2)  + ",";
-    payload += "\"diskRollRPM\":"     + String(diskRollRPM, 1)    + ",";
-    payload += "\"diskYawRPM\":"      + String(diskYawRPM, 1);
-    payload += "}";
+  payload += "\"t\":" + String(t_val, 3) + ",";
+  payload += "\"roll\":" + String(roll, 3) + ",";
+  payload += "\"pitch\":" + String(pitch, 3) + ",";
+  payload += "\"yaw\":" + String(yaw, 3) + ",";
+  payload += "\"gyroX\":" + String(gyroX, 3) + ",";
+  payload += "\"gyroY\":" + String(gyroY, 3) + ",";
+  payload += "\"gyroZ\":" + String(gyroZ, 3) + ",";
+  payload += "\"servoRollAngle\":" + String(servoRollAngle, 2) + ",";
+  payload += "\"servoYawAngle\":" + String(servoYawAngle, 2) + ",";
+  payload += "\"diskRollRPM\":" + String(diskRollRPM, 1) + ",";
+  payload += "\"diskYawRPM\":" + String(diskYawRPM, 1);
+  payload += "}";
 
   mqtt.publish("nautica", payload, false, 1);
 
   Serial.println("JSON enviado: " + payload);
   delay(1000);
+
+    // daqui pra baixo você usa as variáveis como quiser
+  }
+
+  
 }
