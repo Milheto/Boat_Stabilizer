@@ -1,3 +1,10 @@
+/*
+------------------------------------------------------------------------------
+Código para Controle do MPU6050, girar o disco de inércia e mandar informações para o esp32
+
+
+*/
+
 #include <PID_v1.h>
 #include "Wire.h"           
 #include <MPU6050_light.h>  
@@ -7,6 +14,11 @@ int motor = 11;         //porta o motor
 int motor_speed = 135;  // minima rotação do motor
 
 Servo servo_motor;  // servo motor declarado
+
+// Parametros para mandar para o esp32
+
+int servo_pos;
+
 
 
 //PID _______________________________________________________________________________
@@ -21,8 +33,26 @@ PID PID1(&PV, &CV, &SetP, Pk1, Ik1, Dk1, DIRECT);  // parabemetros da PID
 
 MPU6050 mpu(Wire);        // comunicando com o mpu
 unsigned long timer = 0;  
+unsigned long timer2 = 0;
 
-void setup()  //executes once upon energizing
+
+void enviaSerial(){
+  char linha[200];
+
+  snprintf(linha, sizeof(linha),
+          "t:%.3f,roll:%.3f,pitch:%.3f,yaw:%.3f,"
+          "gyroX:%.3f,gyroY:%.3f,gyroZ:%.3f,"
+          "servoRollAngle:%.2f,servoYawAngle:%.2f,"
+          "diskRollRPM:%.1f,diskYawRPM:%.1f",
+          t_val, roll, pitch, yaw,
+          mpu.getAngleX(), mpu.getAngleY, mpu.getAngleZ,
+          servo_pos, servoYawAngle,
+          motor_speed, diskYawRPM);
+
+  Serial.println(linha);
+}
+
+void setup()  
 {
   Serial.begin(9600);
   pinMode(motor, OUTPUT);
@@ -52,14 +82,6 @@ void loop()  //continuous control loop
   {
     PV = (mpu.getAngleY());  // update PV
     timer = millis();
-
-    // Impressão dos ângulos X, Y, Z
-    //Serial.print("X: ");
-    //Serial.print(mpu.getAngleX());
-    //Serial.print(" | Y: ");
-    //Serial.print(mpu.getAngleY());
-    //Serial.print(" | Z: ");
-    //Serial.println(mpu.getAngleZ());
   }
 
   //PID control______________________________________________________________________
@@ -70,9 +92,13 @@ void loop()  //continuous control loop
   }
 
   //Servo____________________________________________________________________________
-  int servo_pos = map(CV, -25, 25, 75, 125);  //scale PID output to +/- 25 degrees about centerpoint
+  servo_pos = map(CV, -25, 25, 75, 125);  //scale PID output to +/- 25 degrees about centerpoint
   servo_motor.write(servo_pos);              // update servo position
 
+  if((millis() - timer2)>500){
+    enviaSerial();
+    timer2 = millis();  
+  }
 
   //Motor control____________________________________________________________________
   analogWrite(motor, motor_speed);  //motor just turns on at lowest RPM setting
