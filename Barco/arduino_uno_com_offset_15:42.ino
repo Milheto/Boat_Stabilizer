@@ -3,7 +3,7 @@
 #include <MPU6050_light.h>  
 #include "Servo.h"
 
-int motor = 12;         // porta do motor (corrigido para 12)
+int motor = 9;         // porta do motor (corrigido para 12)
 int motor_speed = 135;  // mínima rotação do motor
 
 Servo servo_motor_yaw_esq;  // servo motor esquerdo
