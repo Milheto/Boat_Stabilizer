@@ -3,31 +3,39 @@
 #include <WiFiAP.h>
 #include <WebServer.h>
 #include <ESPmDNS.h>
+#include <ESP32Servo.h>   // biblioteca correta para ESP32
 
 const char *ssid = "ESPNautica";
 const char *password = "MelhorGrupo";
 
 WebServer server(80);
+Servo servo;
 
-// Variáveis para guardar os últimos valores enviados
+int pos = 0;
+int pos_ini = 0;
+int pos_fim = 1;
+int tempo_ida = 1000;
+int tempo_volta = 1000;
+int intervalo = 1000;
+int ctrl2 = 0;
+int control = 0;
+
 String ultimoMensagem = "";
-String pos_ini, pos_fim, tempo_ida, tempo_volta, intervalo, ctrl2;
 
 void handleRoot() {
   String html = "";
   html += "<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Configuração Servo</title></head><body>";
   html += "<center><h2>Configuração dos parâmetros</h2>";
   html += "<form action='/enviar' method='GET'>";
-  html += "pos_ini: <input type='number' name='pos_ini' value='" + pos_ini + "'><br><br>";
-  html += "pos_fim: <input type='number' name='pos_fim' value='" + pos_fim + "'><br><br>";
-  html += "tempo_ida: <input type='number' name='tempo_ida' value='" + tempo_ida + "'><br><br>";
-  html += "tempo_volta: <input type='number' name='tempo_volta' value='" + tempo_volta + "'><br><br>";
-  html += "intervalo: <input type='number' name='intervalo' value='" + intervalo + "'><br><br>";
-  html += "ctrl2: <input type='number' name='ctrl2' value='" + ctrl2 + "'><br><br>";
+  html += "pos_ini: <input type='number' name='pos_ini' value='" + String(pos_ini) + "'><br><br>";
+  html += "pos_fim: <input type='number' name='pos_fim' value='" + String(pos_fim) + "'><br><br>";
+  html += "tempo_ida: <input type='number' name='tempo_ida' value='" + String(tempo_ida) + "'><br><br>";
+  html += "tempo_volta: <input type='number' name='tempo_volta' value='" + String(tempo_volta) + "'><br><br>";
+  html += "intervalo: <input type='number' name='intervalo' value='" + String(intervalo) + "'><br><br>";
+  html += "ctrl2: <input type='number' name='ctrl2' value='" + String(ctrl2) + "'><br><br>";
   html += "<input type='submit' value='Enviar'>";
   html += "</form>";
 
-  // Se já houve envio, mostra valores e botão parar
   if (ultimoMensagem != "") {
     html += "<h3>Últimos valores enviados:</h3>";
     html += "<p>" + ultimoMensagem + "</p>";
@@ -41,47 +49,43 @@ void handleRoot() {
 }
 
 void handleEnviar() {
-  // pega os valores enviados pelo formulário
-  pos_ini = server.arg("pos_ini");
-  pos_fim = server.arg("pos_fim");
-  tempo_ida = server.arg("tempo_ida");
-  tempo_volta = server.arg("tempo_volta");
-  intervalo = server.arg("intervalo");
-  ctrl2 = server.arg("ctrl2");
+  pos_ini = server.arg("pos_ini").toInt();
+  pos_fim = server.arg("pos_fim").toInt();
+  tempo_ida = server.arg("tempo_ida").toInt();
+  tempo_volta = server.arg("tempo_volta").toInt();
+  intervalo = server.arg("intervalo").toInt();
+  ctrl2 = server.arg("ctrl2").toInt();
 
-  // monta a mensagem
-  ultimoMensagem = "pos_ini:" + pos_ini +
-                   ",pos_fim:" + pos_fim +
-                   ",tempo_ida:" + tempo_ida +
-                   ",tempo_volta:" + tempo_volta +
-                   ",intervalo:" + intervalo +
-                   ",ctrl2:" + ctrl2;
+  ultimoMensagem = "pos_ini:" + String(pos_ini) +
+                   ",pos_fim:" + String(pos_fim) +
+                   ",tempo_ida:" + String(tempo_ida) +
+                   ",tempo_volta:" + String(tempo_volta) +
+                   ",intervalo:" + String(intervalo) +
+                   ",ctrl2:" + String(ctrl2);
 
   Serial.println(ultimoMensagem);
+  control = 1;
 
-  // volta para a mesma página
   handleRoot();
 }
 
 void handleParar() {
-  // força ctrl2 = 1
-  String mensagemParar = "pos_ini:" + pos_ini +
-                         ",pos_fim:" + pos_fim +
-                         ",tempo_ida:" + tempo_ida +
-                         ",tempo_volta:" + tempo_volta +
-                         ",intervalo:" + intervalo +
-                         ",ctrl2:1";
+  // força parada imediata
+  control = 0;   // desliga o movimento
+  ctrl2 = 0;     // opcional, para não reativar depois
 
-  Serial.println(mensagemParar);
+  ultimoMensagem = "Parado pelo botão";
 
-  // mantém última mensagem como "parar"
-  ultimoMensagem = mensagemParar;
-
+  Serial.println("Servo parado!");
   handleRoot();
 }
 
+
 void setup() {
   Serial.begin(9600);
+
+  // escolha um GPIO válido para servo (ex: 18, 19, 21, 23, 25, 26, 27, 32, 33)
+  servo.attach(32);
 
   WiFi.softAP(ssid, password);
   IPAddress myIP = WiFi.softAPIP();
@@ -103,4 +107,20 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+  if (control == 1) {
+    for (pos = pos_ini; pos <= pos_fim; pos++) {
+      servo.write(pos);
+      delay(tempo_ida / max(1, (pos_fim - pos_ini)));
+    }
+    for (pos = pos_fim; pos > pos_ini; pos--) {
+      servo.write(pos);
+      delay(tempo_volta / max(1, (pos_fim - pos_ini)));
+    }
+    delay(intervalo);
+    if (ctrl2 == 1) {
+      ctrl2 = 0;
+      control = 0;
+    }
+  }
 }
