@@ -1,0 +1,24 @@
+#include "Servo.h"
+
+Servo servo_motor_dir_yaw; //10 Maior / 80
+Servo servo_motor_esq_yaw; //11 Menor / 90
+
+
+
+int variavel = 0; // Se + 
+void setup()  
+{
+  Serial.begin(9600);
+  variavel = 30; // se + vira pra cima, se é - vira pra baixo
+  servo_motor_esq_yaw.attach(11); // define pino do servo_motor como 10
+  servo_motor_dir_yaw.attach(10); // define pino do servo_motor como 10
+
+
+  servo_motor_dir_yaw.write(81 - variavel);  // centro mais proximo em graus
+  servo_motor_esq_yaw.write(84 + variavel); 
+}
+
+void loop(){
+
+}
+  
