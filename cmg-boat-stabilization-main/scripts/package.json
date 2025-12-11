@@ -1,0 +1,14 @@
+{
+  "name": "arduino-simulator",
+  "version": "1.0.0",
+  "description": "Scripts para simular Arduino enviando dados via Serial",
+  "main": "simulateArduino.js",
+  "scripts": {
+    "simulate": "node simulateArduino.js",
+    "simulate-virtual": "node simulateArduinoVirtual.js"
+  },
+  "dependencies": {
+    "serialport": "^12.0.0"
+  }
+}
+
