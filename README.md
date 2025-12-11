@@ -64,8 +64,9 @@ A **interface gráfica** atua como painel de monitoramento e histórico, permiti
 ## Gerador de ondas
 
 O **gerador de ondas** foi construído utilizando:
-- estrutura em **tubos de PVC**,  
-- um **servo motor MG996R**,  
-- e um **Arduino Uno** para controle.
+- estrutura em **tubos de PVC**;
+- dois **servos motor MG996R**; 
+- um **Arduino Uno** para controle;
+- um **ESP32** para uso de interface gráfica via WiFi.
 
 Esse sistema tem como objetivo criar **perturbações controladas** na água, permitindo testar o desempenho do sistema de estabilização em diferentes condições de “mar”, de forma reprodutível e segura em ambiente de laboratório.
