@@ -1,6 +1,6 @@
 ## Sobre o projeto
 
-Este projeto foi desenvolvido no contexto da disciplina **ENG4033 – Projeto e Programação de Microcontroladores**, ministrada pelo professor **Jan K. S.**  
+Este projeto foi desenvolvido no contexto da disciplina **ENG4033 – Projeto e Programação de Microcontroladores** da **PUC-Rio**, ministrada pelo professor **Jan K. S.**  
 
 A proposta surgiu a partir de uma parceria da disciplina com a empresa de embarcações **Oceânica**, que atua na área de operações marítimas e offshore.
 
