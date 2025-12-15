@@ -59,6 +59,14 @@ A **interface gráfica** atua como painel de monitoramento e histórico, permiti
 - acompanhar as **correções de controle** aplicadas,  
 - e **simular graficamente** uma embarcação com as mesmas movimentações, em tempo quase real — mesmo sem contato visual direto com o protótipo.
 
+
+<img width="4420" height="3066" alt="Img_BARCO_UNO_ESP32" src="https://github.com/user-attachments/assets/b153c282-e840-4e89-98f2-943151216794" />
+
+O MPU6050 também é adicionado considerando as entradas analógicas conforme o esquemático abaixo:
+
+<img width="768" height="504" alt="Img_MPU6050_UNO" src="https://github.com/user-attachments/assets/777a261c-d8ae-4aa3-9000-93ec0085edad" />
+
+
 ---
 
 ## Gerador de ondas
