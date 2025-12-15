@@ -70,3 +70,7 @@ O **gerador de ondas** foi construído utilizando:
 - um **ESP32** para uso de interface gráfica via WiFi.
 
 Esse sistema tem como objetivo criar **perturbações controladas** na água, permitindo testar o desempenho do sistema de estabilização em diferentes condições de “mar”, de forma reprodutível e segura em ambiente de laboratório.
+
+<img width="1936" height="1192" alt="Img_GO_UNO" src="https://github.com/user-attachments/assets/a858900f-9108-4c94-8a37-353ded966778" />
+
+<img width="1746" height="1111" alt="Img_GO_ESP32" src="https://github.com/user-attachments/assets/269c119d-5fd9-4936-a2eb-fe4d8120ab9d" />
