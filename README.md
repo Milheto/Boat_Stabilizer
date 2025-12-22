@@ -10,6 +10,8 @@ A ideia é que o protótipo represente um barco de apoio que consiga manter-se o
 - ocorre o **embarque e desembarque de mergulhadores**, ou  
 - são realizados **pequenos reparos e intervenções** em estruturas próximas à superfície.
 
+[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/-3eV7tI9Js8/0.jpg)](https://www.youtube.com/watch?v=-3eV7tI9Js8)
+
 ---
 
 ## Escopo do projeto
